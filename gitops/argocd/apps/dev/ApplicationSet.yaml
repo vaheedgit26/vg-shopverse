@@ -13,9 +13,6 @@ spec:
         - project: shopverse
           env: dev
           component: frontend
-        - project: shopverse
-          env: dev
-          component: database
 
   template:
     metadata:
