@@ -3,7 +3,7 @@ set -euo pipefail
 ##################################################################################
 # Usage: bash main.sh  <component> <env> <action> [project bucket region]
 # Example:
-#   bash main.sh nat-instance dev plan 
+#   bash main.sh eks dev plan 
 ##################################################################################
 R="\e[31m"
 G="\e[32m"
