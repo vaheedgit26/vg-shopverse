@@ -4,9 +4,7 @@ module "ecr" {
   project = var.project   # "ecommerce"
   env     = var.env       # "dev"
   repositories = [
-    "ecommerce/product-service",
-    "ecommerce/cart-service",
-    "ecommerce/user-service",
-    "ecommerce/order-service"
+    "shopverse-frontend",
+    "shopverse-backend"
   ]
 }
