@@ -13,7 +13,7 @@ spec:
         - project: shopverse
           env: dev
           component: frontend
-
+  # Application template
   template:
     metadata:
       name: "{{project}}-{{env}}-{{component}}"
