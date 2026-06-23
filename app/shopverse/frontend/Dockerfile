@@ -52,6 +52,8 @@ COPY conf/shopverse.conf /etc/nginx/conf.d/shopverse.conf
 RUN chmod 644 /etc/nginx/conf.d/*.conf
 
 EXPOSE 8080
-USER nginx      # UID: 101 for nginx user
+
+# UID: 101 for 'nginx' user
+USER nginx      
 
 CMD ["nginx", "-g", "daemon off;"]
