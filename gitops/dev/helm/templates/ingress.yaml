@@ -29,12 +29,6 @@ metadata:
 spec:
   ingressClassName: alb   # ✅ modern standard
   
-  defaultBackend:
-    service:
-      name: shopverse-frontend-svc
-      port:
-        number: 8080
-
   rules:
     - http:
         paths:
