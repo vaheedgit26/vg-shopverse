@@ -11,7 +11,7 @@ spec:
     - port: {{ .Values.backend.servicePort }}
       targetPort: 8080
       protocol: TCP
-      nodePort: 30081
+      # nodePort: 30081
   selector:
     app: shopverse
     component: backend
