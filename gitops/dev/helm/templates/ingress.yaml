@@ -11,6 +11,9 @@ metadata:
 
     # Listener config
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    
+    # ALB to Kubernetes service protocol
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
 
     # Health check (applies to all target groups)
     alb.ingress.kubernetes.io/healthcheck-path: /health            # common for all the microservices and best practice
