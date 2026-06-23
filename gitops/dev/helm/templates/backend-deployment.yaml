@@ -27,17 +27,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: shopverse-config
-          env:
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: shopverse-secret
-                  key: DB_PASSWORD
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: shopverse-secret
-                  key: JWT_SECRET
+            - secretRef:
+                name: shopverse-dev-mysql-jwt-credentials
           resources:
             limits:
               memory: "256Mi"
