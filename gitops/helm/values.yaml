@@ -26,20 +26,10 @@ backend:
 # MySQL
 # ──────────────────────────────────────
 mysql:
+  external-name-service: shopverse-mysql
   database: shopverse
   user: shopverse
-  rootPassword: ""
-  password: ""
-  storage: 5Gi
-  storageClass: gp2
-  resources:
-    limits:
-      memory: "512Mi"
-      cpu: "500m"
-    requests:
-      memory: "256Mi"
-      cpu: "250m"
-
+    
 # ──────────────────────────────────────
 # Shared
 # ──────────────────────────────────────
