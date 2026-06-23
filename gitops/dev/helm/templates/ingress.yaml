@@ -32,6 +32,7 @@ spec:
   rules:
     - http:
         paths:
+        
           - path: /api
             pathType: Prefix
             backend:
