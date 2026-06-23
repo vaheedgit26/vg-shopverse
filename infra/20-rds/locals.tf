@@ -5,7 +5,7 @@ locals {
   sg_name                = "${local.resource_name}-mysql-rds-sg"
   identifier             = "${local.resource_name}-mysql"
   db_subnet_group_name   = "${local.resource_name}-mysql-rds-db-subnet-group"
-  ecommerce_secret_json  = jsondecode(data.aws_secretsmanager_secret_version.ecommerce_secret_value.secret_string)
+  ecommerce_secret_json  = jsondecode(data.aws_secretsmanager_secret_version.shopverse_secret_value.secret_string)
   vpc_security_group_ids = [data.terraform_remote_state.eks.outputs.cluster_security_group_id, data.terraform_remote_state.bastion.outputs.bastion_sg_id]
 
   common_tags = {
