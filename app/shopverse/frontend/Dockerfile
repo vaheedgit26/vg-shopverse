@@ -40,7 +40,7 @@ RUN mkdir -p \
     /var/log/nginx \
     /etc/nginx \
     /run \
-  && chmod 755 /etc/nginx
+  && chmod -R 755 /etc/nginx
   
 # Copy dist folder
 COPY --from=builder /app/dist /usr/share/nginx/html
