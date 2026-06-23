@@ -21,10 +21,11 @@ RUN npm run build
 FROM nginx:stable-alpine
 RUN apk upgrade --no-cache
 
-# Remove default server and default index
-RUN rm -f \
-    /usr/share/nginx/html/index.html \
-    /etc/nginx/conf.d/default.conf
+# Remove default index
+RUN rm -f /usr/share/nginx/html/index.html 
+
+# Remove default server
+# RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Prepare directories for non-root nginx
 RUN mkdir -p \
@@ -46,10 +47,7 @@ RUN mkdir -p \
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copy custom NGINX config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy custom NGINX config
-# COPY Docker_Stuff/expense.conf /etc/nginx/conf.d/expense.conf
+COPY shopverse.conf /etc/nginx/conf.d/shopverse.conf
 
 # Ensure config file permissions
 RUN chmod 644 /etc/nginx/conf.d/*.conf
