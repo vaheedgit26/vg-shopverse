@@ -11,7 +11,7 @@ spec:
     - port: {{ .Values.frontend.servicePort }}
       targetPort: 80
       protocol: TCP
-      nodePort: 30080
+      # nodePort: 30080
   selector:
     app: shopverse
     component: frontend
