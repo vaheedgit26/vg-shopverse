@@ -6,7 +6,7 @@ frontend:
   replicas: 1
   image: ""  # frontend-image
   serviceName: shopverse-frontend-svc
-  servicePort: 80
+  servicePort: 8080
   ingressName: shopverse-frontend-ingress
   ingressHost: ""
 
