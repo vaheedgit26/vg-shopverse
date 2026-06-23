@@ -47,7 +47,7 @@ RUN mkdir -p \
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Copy custom NGINX config
-COPY shopverse.conf /etc/nginx/conf.d/shopverse.conf
+COPY conf/shopverse.conf /etc/nginx/conf.d/shopverse.conf
 
 # Ensure config file permissions
 RUN chmod 644 /etc/nginx/conf.d/*.conf
