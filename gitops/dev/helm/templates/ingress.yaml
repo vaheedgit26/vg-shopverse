@@ -19,6 +19,10 @@ metadata:
     alb.ingress.kubernetes.io/healthcheck-path: /health            # common for all the microservices and best practice
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
 
+    # Performance / Timeouts (default is 60s)
+    alb.ingress.kubernetes.io/load-balancer-attributes: >
+      idle_timeout.timeout_seconds=60
+
     # Optional tuning (recommended)
     alb.ingress.kubernetes.io/success-codes: "200"
     alb.ingress.kubernetes.io/healthcheck-interval-seconds: "15"
