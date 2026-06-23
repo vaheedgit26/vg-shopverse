@@ -9,6 +9,3 @@ data:
   DB_PORT: "3306"
   DB_NAME: {{ .Values.mysql.database | quote }}
   FRONTEND_ORIGIN: "*"      # http://shopverse-frontend-svc:80
-  
-  # DB_USER: {{ .Values.mysql.user | quote }}
-  # VITE_API_URL: "http://shopverse-backend-svc:8080"
