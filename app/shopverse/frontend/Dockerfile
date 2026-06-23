@@ -21,11 +21,10 @@ RUN npm run build
 FROM nginx:stable-alpine
 RUN apk upgrade --no-cache
 
-# Remove default index
-RUN rm -f /usr/share/nginx/html/index.html 
-
-# Remove default server
-# RUN rm -f /etc/nginx/conf.d/default.conf
+# Remove default index and default server
+RUN rm -f \
+    /usr/share/nginx/html/index.html \
+    /etc/nginx/conf.d/default.conf 
 
 # Prepare directories for non-root nginx
 RUN mkdir -p \
@@ -53,6 +52,6 @@ COPY conf/shopverse.conf /etc/nginx/conf.d/shopverse.conf
 RUN chmod 644 /etc/nginx/conf.d/*.conf
 
 EXPOSE 8080
-USER nginx
+USER nginx      # UID: 101 for nginx user
 
 CMD ["nginx", "-g", "daemon off;"]
