@@ -24,7 +24,7 @@ metadata:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
     
     # Grouping (if multiple ingresses later)
-    alb.ingress.kubernetes.io/group.name: ecommerce-internal
+    alb.ingress.kubernetes.io/group.name: shopverse
 
 spec:
   ingressClassName: alb   # ✅ modern standard
