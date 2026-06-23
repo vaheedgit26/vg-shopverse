@@ -3,7 +3,7 @@
 # ──────────────────────────────────────
 frontend:
   deploymentName: shopverse-frontend
-  replicas: 2
+  replicas: 1
   image: ""  # frontend-image
   serviceName: shopverse-frontend-svc
   servicePort: 80
@@ -15,7 +15,7 @@ frontend:
 # ──────────────────────────────────────
 backend:
   deploymentName: shopverse-backend
-  replicas: 2
+  replicas: 1
   image: ""  # backend-image
   serviceName: shopverse-backend-svc
   servicePort: 8080
