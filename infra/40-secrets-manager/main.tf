@@ -6,6 +6,7 @@ module "secrets_manager" {
   db_secret_name = var.aws_secret_name                # /shopverse/dev/mysql-db-credentials
   db_username    = var.db_username
   db_password    = var.db_password
+  jwt_secret     = var.jwt_secret
 
   common_tags = local.common_tags
 }
