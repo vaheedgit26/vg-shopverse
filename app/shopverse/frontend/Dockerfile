@@ -42,7 +42,7 @@ RUN mkdir -p \
     /run \
   && chmod -R 755 /etc/nginx
   
-# Copy dist folder
+# Copy dist folder contents
 COPY --from=builder /app/dist/ /usr/share/nginx/html/
 
 # Copy custom NGINX config
