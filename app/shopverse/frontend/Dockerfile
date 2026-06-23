@@ -43,7 +43,7 @@ RUN mkdir -p \
   && chmod -R 755 /etc/nginx
   
 # Copy dist folder
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist/ /usr/share/nginx/html/
 
 # Copy custom NGINX config
 COPY conf/shopverse.conf /etc/nginx/conf.d/shopverse.conf
