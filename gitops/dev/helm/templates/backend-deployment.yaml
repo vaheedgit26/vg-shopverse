@@ -20,7 +20,7 @@ spec:
       containers:
         - name: backend
           image: {{ .Values.backend.image | quote }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always        # IfNotPresent
           ports:
             - containerPort: 8080
               protocol: TCP
