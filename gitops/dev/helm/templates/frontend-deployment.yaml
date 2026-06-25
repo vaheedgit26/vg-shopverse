@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: "{{ include "frontend.image" . }}"
+          image: "{{ include "shopverse.frontend.image" . }}"
           imagePullPolicy: Always
           ports:
             - containerPort: 80
