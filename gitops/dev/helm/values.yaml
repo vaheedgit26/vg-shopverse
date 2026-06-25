@@ -1,7 +1,9 @@
-# ──────────────────────────────────────
-# Frontend
-# ──────────────────────────────────────
 frontend:
+  image:
+    uri: 254405569649.dkr.ecr.us-east-1.amazonaws.com
+    name: shopverse-frontend
+    version: v1
+    
   deploymentName: shopverse-frontend
   replicas: 1
   image: ""  # frontend-image
@@ -14,6 +16,11 @@ frontend:
 # Backend
 # ──────────────────────────────────────
 backend:
+  image:
+    uri: 254405569649.dkr.ecr.us-east-1.amazonaws.com
+    name: shopverse-back
+    version: v1
+    
   deploymentName: shopverse-backend
   replicas: 1
   image: ""  # backend-image
