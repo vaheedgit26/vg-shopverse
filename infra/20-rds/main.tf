@@ -1,6 +1,6 @@
 module "rds" {
   source = "git::https://github.com/vaheedgit26/Infra-1.0.git//modules/rds"
-  db_subnet_group_name = local.db_subnet_group_name
+  # db_subnet_group_name = local.db_subnet_group_name
   database_subnet_ids  = data.terraform_remote_state.vpc.outputs.database_subnet_ids       # For subnet group creation
 
   identifier              = local.identifier
