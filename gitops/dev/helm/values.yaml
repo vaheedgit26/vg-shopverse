@@ -33,6 +33,7 @@ backend:
 # MySQL
 # ──────────────────────────────────────
 mysql:
+  host: <your-db.cluster-abcdefghijkl.ap-south-1.rds.amazonaws.com>
   externalNameService: shopverse-mysql
   database: shopverse
   user: shopverse
