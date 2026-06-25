@@ -1,6 +1,6 @@
 module "rds" {
   source = "git::https://github.com/vaheedgit26/Infra-1.0.git//modules/rds"
-  db_subnet_group_name = 
+  db_subnet_group_name = local.db_subnet_group_name
   database_subnet_ids  = data.terraform_remote_state.vpc.outputs.database_subnet_ids       # For subnet group creation
 
   identifier              = local.identifier
@@ -12,8 +12,8 @@ module "rds" {
   storage_type            = "gp2"
   storage_encrypted       = false   # true
   db_name                 = "shopverse"
-  username                = local.shopverse_secret_json.username
-  password                = local.shopverse_secret_json.password
+  db_username             = local.shopverse_secret_json.username
+  db_password             = local.shopverse_secret_json.password
   db_subnet_group_name    = local.db_subnet_group_name
   vpc_security_group_ids  = local.vpc_security_group_ids
 
