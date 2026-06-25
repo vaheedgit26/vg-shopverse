@@ -33,7 +33,7 @@ backend:
 # MySQL
 # ──────────────────────────────────────
 mysql:
-  external-name-service: shopverse-mysql
+  externalNameService: shopverse-mysql
   database: shopverse
   user: shopverse
     
