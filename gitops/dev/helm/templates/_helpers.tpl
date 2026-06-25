@@ -1,7 +1,7 @@
-{{- define "frontend.image" -}}
+{{- define "shopverse.frontend.image" -}}
 {{ .Values.frontend.image.uri }}/{{ .Values.frontend.image.name }}:{{ .Values.frontend.image.version }}
 {{- end }}
 
-{{- define "backend.image" -}}
+{{- define "shopverse.backend.image" -}}
 {{ .Values.backend.image.uri }}/{{ .Values.backend.image.name }}:{{ .Values.backend.image.version }}
 {{- end }}
