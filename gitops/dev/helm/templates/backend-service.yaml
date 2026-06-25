@@ -6,7 +6,7 @@ metadata:
     app: shopverse
     component: backend
 spec:
-  type: NodePort
+  #type: NodePort
   ports:
     - port: {{ .Values.backend.servicePort }}
       targetPort: 8080
