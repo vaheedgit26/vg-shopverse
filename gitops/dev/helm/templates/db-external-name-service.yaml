@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.mysql.externalNaneService | quote }}  
+  name: {{ .Values.mysql.externalNameService | quote }}  
   # namespace: shopverse-dev
 spec:
   type: ExternalName
