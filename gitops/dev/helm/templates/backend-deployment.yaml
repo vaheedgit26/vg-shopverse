@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: "{{ include "backend.image" . }}"
+          image: "{{ include "shopverse.backend.image" . }}"
           imagePullPolicy: Always        # IfNotPresent
           ports:
             - containerPort: 8080
