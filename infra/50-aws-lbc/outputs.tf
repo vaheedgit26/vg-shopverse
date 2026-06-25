@@ -15,7 +15,7 @@ output "eks_cluster_endpoint" {
 
 # Output the EKS cluster ca
 output "eks_cluster_ca" {
-  value = local.eks_cluster_ca
+  value = local.eks_cluster_ca_certificate
 }
 
 # Output the EKS cluster OIDC URL
