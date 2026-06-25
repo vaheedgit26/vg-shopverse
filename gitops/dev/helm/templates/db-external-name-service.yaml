@@ -5,4 +5,4 @@ metadata:
   # namespace: shopverse-dev
 spec:
   type: ExternalName
-  externalName: "<your-db.cluster-abcdefghijkl.ap-south-1.rds.amazonaws.com>"
+  externalName: {{ .Values.mysql.host | quote }}
