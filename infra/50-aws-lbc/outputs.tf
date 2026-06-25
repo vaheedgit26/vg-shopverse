@@ -10,7 +10,7 @@ output "eks_cluster_name" {
 
 # Output the EKS cluster endpoint
 output "eks_cluster_endpoint" {
-  value = local.eks_cluster_endpoint
+  value = local.eks_host
 }
 
 # Output the EKS cluster ca
