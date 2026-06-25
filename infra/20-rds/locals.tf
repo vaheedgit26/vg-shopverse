@@ -1,5 +1,5 @@
 locals {
-  resource_name = "${var.project}/${var.env}"
+  resource_name = "${var.project}-${var.env}"
  
   availability_zone      = data.terraform_remote_state.vpc.outputs.availability_zones[0]
   sg_name                = "${local.resource_name}-mysql-rds-sg"
