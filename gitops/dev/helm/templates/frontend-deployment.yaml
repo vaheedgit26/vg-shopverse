@@ -22,7 +22,7 @@ spec:
           image: "{{ include "shopverse.frontend.image" . }}"
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               protocol: TCP
           resources:
             limits:
