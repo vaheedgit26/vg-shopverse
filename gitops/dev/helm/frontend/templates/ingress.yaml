@@ -3,10 +3,11 @@ kind: Ingress
 metadata:
   name: shopverse-frontend-ingress
   annotations:
-    alb.ingress.kubernetes.io/group.name: shopverse-dev
-
     # frontend-specific health check
     alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+
+    alb.ingress.kubernetes.io/group.name: shopverse-dev
 
 spec:
   ingressClassName: alb
