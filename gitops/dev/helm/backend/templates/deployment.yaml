@@ -30,12 +30,12 @@ spec:
             - secretRef:
                 name: {{ .Values.backend.secret.name }}     # shopverse-dev-mysql-jwt-credentials
           resources:
-            limits:
-              memory: "256Mi"
-              cpu: "200m"
             requests:
               memory: "128Mi"
               cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
           livenessProbe:
             httpGet:
               path: /health
