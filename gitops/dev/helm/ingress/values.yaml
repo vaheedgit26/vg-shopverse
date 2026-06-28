@@ -33,7 +33,7 @@ ingress:
     alb.ingress.kubernetes.io/healthy-threshold-count: "2"
     alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
     
-    # Grouping (very important if multiple ingresses later)
+    # Grouping (very important for multiple ingresses)
     alb.ingress.kubernetes.io/group.name: shopverse
 
     # ✅ ACM Certificate
