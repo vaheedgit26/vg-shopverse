@@ -16,6 +16,7 @@ frontend:
     enabled: false
     name: shopverse-frontend-ingress
     path: /
+    pathType: Prefix
     host: ""
 
     annotations:
