@@ -33,7 +33,6 @@ spec:
           {{- else -}}3
           {{- end }}
 
-
         # 🔹 Notifications
         #notifications.argoproj.io/subscribe.on-deployed.email: "expense-{{env}}-{{path.basename}}@example.com"
         #notifications.argoproj.io/subscribe.on-health-degraded.email: "expense-{{env}}-{{path.basename}}@example.com"
@@ -41,7 +40,7 @@ spec:
 
     spec:
       project: "{{project}}-{{env}}"         # This name should match with the name of 'AppProject' created previously
-
+      
       source:
         repoURL: https://github.com/vaheedgit26/vg-shopverse.git
         targetRevision: main
