@@ -40,6 +40,4 @@ mysql:
   database: shopverse
   user: shopverse
     
- 
-
 jwtSecret: ""
