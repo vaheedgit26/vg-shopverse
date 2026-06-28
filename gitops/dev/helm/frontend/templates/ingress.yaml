@@ -6,8 +6,10 @@ metadata:
     # frontend-specific health check
     alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    
     # This is important to mix all the service ingresses and form one complete ingress
     alb.ingress.kubernetes.io/group.name: shopverse-dev
+    
     # Priority
     alb.ingress.kubernetes.io/group.order: "2"   # lower priority
 
