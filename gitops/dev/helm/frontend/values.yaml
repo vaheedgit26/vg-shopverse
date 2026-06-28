@@ -15,6 +15,7 @@ frontend:
   ingress:
     enabled: false
     name: shopverse-frontend-ingress
+    ingressClassName: alb
     path: /
     pathType: Prefix
     host: ""
