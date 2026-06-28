@@ -15,6 +15,9 @@ backend:
     name: shopverse-backend-svc
     port: 8080
 
+  configmap:
+    name: shopverse-config
+
   ingress:
     enabled: false
     name: shopverse-backend-ingress
@@ -38,6 +41,7 @@ backend:
 # ──────────────────────────────────────
 mysql:
   host: shopverse-dev-mysql.ca9aykaigakf.us-east-1.rds.amazonaws.com
+  port: 3306
   externalNameService: shopverse-mysql
   database: shopverse
   user: shopverse
