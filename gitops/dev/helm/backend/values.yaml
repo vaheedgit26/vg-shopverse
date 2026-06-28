@@ -19,6 +19,7 @@ backend:
     enabled: false
     name: shopverse-backend-ingress
     path: /api
+    pathType: Prefix
     host: ""
 
     annotations:
