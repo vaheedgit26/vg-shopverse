@@ -32,15 +32,6 @@ backend:
       alb.ingress.kubernetes.io/group.order: "1"   # 🔥 higher priority
       
 # ──────────────────────────────────────
-# Shared
-# ──────────────────────────────────────
-shared:
-  ingress:
-    annotations:
-      # This is important to mix all the service ingresses and form one complete ingress
-      alb.ingress.kubernetes.io/group.name: shopverse-dev
-
-# ──────────────────────────────────────
 # MySQL
 # ──────────────────────────────────────
 mysql:
