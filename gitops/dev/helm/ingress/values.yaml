@@ -3,6 +3,7 @@
 # ──────────────────────────────────────
 ingress:
   enabled: false
+  name: shopverse-base-ingress
   ingressClassName: alb
   
   annotations: 
