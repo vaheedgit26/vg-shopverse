@@ -10,6 +10,8 @@ metadata:
     # This is important to mix all the service ingresses and form one complete ingress
     alb.ingress.kubernetes.io/group.name: shopverse-dev
 
+    alb.ingress.kubernetes.io/group.order: "1"   # 🔥 higher priority
+
 spec:
   ingressClassName: alb
   rules:
