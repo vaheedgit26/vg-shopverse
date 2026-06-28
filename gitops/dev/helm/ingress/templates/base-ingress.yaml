@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shopverse-base-ingress
+  annotations:
+    # ✅ ALB Exposure
+    alb.ingress.kubernetes.io/scheme: internet-facing
+
+    # ✅ Target pods directly
+    alb.ingress.kubernetes.io/target-type: ip
+
+    # ✅ HTTP + HTTPS listeners
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+
+    # ✅ ACM Certificate
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:REGION:ACCOUNT:certificate/XXXX
+
+    # ✅ Force HTTPS
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+
+    # ✅ Health check (default fallback)
+    alb.ingress.kubernetes.io/healthcheck-path: /
+
+    # ✅ ALB tuning
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=60
+
+    # ✅ WAF (optional but real-world)
+    alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:REGION:ACCOUNT:regional/webacl/XXXX
+
+    # ✅ GROUP (VERY IMPORTANT)
+    alb.ingress.kubernetes.io/group.name: shopverse
+
+spec:
+  ingressClassName: alb
+
+  # ⚠️ Dummy rule (required to create ALB)
+  rules:
+    - http:
+        paths:
+          - path: /dummy
+            pathType: Prefix
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
