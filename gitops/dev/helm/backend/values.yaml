@@ -19,6 +19,9 @@ backend:
   configmap:
     name: shopverse-config
 
+  secret:
+    name: shopverse-dev-mysql-jwt-credentials
+
   ingress:
     enabled: false
     name: shopverse-backend-ingress
