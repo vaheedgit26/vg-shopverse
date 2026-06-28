@@ -12,22 +12,6 @@ frontend:
   ingressHost: ""
 
 # ──────────────────────────────────────
-# Backend
-# ──────────────────────────────────────
-backend:
-  image:
-    uri: 254405569649.dkr.ecr.us-east-1.amazonaws.com
-    name: shopverse-backend
-    version: v1
-    
-  deploymentName: shopverse-backend
-  replicas: 1
-  serviceName: shopverse-backend-svc
-  servicePort: 8080
-  ingressName: shopverse-backend-ingress
-  ingressHost: ""
-
-# ──────────────────────────────────────
 # MySQL
 # ──────────────────────────────────────
 mysql:
