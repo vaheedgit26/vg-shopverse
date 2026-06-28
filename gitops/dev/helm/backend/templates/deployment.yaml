@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.backend.deploymentName }}
+  name: {{ .Values.backend.deployment.name }}
   labels:
     app: shopverse
     component: backend
 spec:
-  replicas: {{ .Values.backend.replicas }}
+  replicas: {{ .Values.backend.deployment.replicas }}
   selector:
     matchLabels:
       app: shopverse
@@ -26,9 +26,9 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: shopverse-config
+                name: {{ .Values.backend.configmap.name }}  # shopverse-config
             - secretRef:
-                name: shopverse-dev-mysql-jwt-credentials
+                name: {{ .Values.backend.secret.name }}     # shopverse-dev-mysql-jwt-credentials
           resources:
             limits:
               memory: "256Mi"
