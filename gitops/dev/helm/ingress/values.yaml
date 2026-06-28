@@ -6,20 +6,20 @@ ingress:
   ingressClassName: alb
   
   annotations: 
-    # ✅ ALB Exposure
+    # ALB Exposure
     alb.ingress.kubernetes.io/scheme: internet-facing
     
     # Target pods directly
     alb.ingress.kubernetes.io/target-type: ip
     
-    # ✅ HTTP + HTTPS listeners
+    # HTTP + HTTPS listeners
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/ip-address-type: ipv4
 
     # ALB to Kubernetes service protocol
     alb.ingress.kubernetes.io/backend-protocol: HTTP
 
-    # ✅ Health check (default fallback)
+    # Health check (default fallback)
     alb.ingress.kubernetes.io/healthcheck-path: /
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
 
@@ -36,11 +36,11 @@ ingress:
     # Grouping (very important for multiple ingresses)
     alb.ingress.kubernetes.io/group.name: shopverse
 
-    # ✅ ACM Certificate
+    # ACM Certificate
     # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:REGION:ACCOUNT:certificate/XXXX
 
-    # ✅ Force HTTPS
+    # Force HTTPS
     # alb.ingress.kubernetes.io/ssl-redirect: "443"
 
-     # ✅ WAF (optional but real-world)
+    # WAF (optional but real-world)
     # alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:REGION:ACCOUNT:regional/webacl/XXXX
