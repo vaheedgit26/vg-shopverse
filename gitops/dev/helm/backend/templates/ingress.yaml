@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.backend.ingress.name }}
+  name: {{ .Values.backend.ingress.name }}                      # shopverse-backend-ingress
   {{- with .Values.backend.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -12,11 +12,11 @@ spec:
   rules:
     - http:
         paths:
-          - path: {{ .Values.backend.ingress.path }}  # /api
-            pathType: Prefix
+          - path: {{ .Values.backend.ingress.path }}            # /api
+            pathType: {{ .Values.backend.ingress.pathType }}    # Prefix
             backend:
               service:
                 name: {{ .Values.backend.service.name }}
                 port:
-                  number: {{ .Values.backend.service.port }}  # 8080
+                  number: {{ .Values.backend.service.port }}    # 8080
 {{- end }}
