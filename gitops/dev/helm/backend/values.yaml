@@ -18,6 +18,7 @@ backend:
   ingress:
     enabled: false
     name: shopverse-backend-ingress
+    ingressClassName: alb
     path: /api
     pathType: Prefix
     host: ""
