@@ -17,4 +17,4 @@ spec:
               service:
                 name: {{ .Values.backend.service.name }}
                 port:
-                  number: 8080
+                  number: {{ .Values.backend.service.port }}  # 8080
