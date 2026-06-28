@@ -2,16 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.backend.ingress.name }}
+  {{- with .Values.backend.ingress.annotations }}
   annotations:
-    # Backend-specific health check
-    alb.ingress.kubernetes.io/healthcheck-path: /health
-    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
-    
-    # This is important to mix all the service ingresses and form one complete ingress
-    alb.ingress.kubernetes.io/group.name: shopverse-dev
-
-    alb.ingress.kubernetes.io/group.order: "1"   # 🔥 higher priority
-
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ingressClassName: alb
   rules:
