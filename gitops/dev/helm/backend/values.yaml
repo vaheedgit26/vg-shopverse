@@ -1,16 +1,3 @@
-frontend:
-  image:
-    uri: 254405569649.dkr.ecr.us-east-1.amazonaws.com
-    name: shopverse-frontend
-    version: v1
-    
-  deploymentName: shopverse-frontend
-  replicas: 1
-  serviceName: shopverse-frontend-svc
-  servicePort: 8080
-  ingressName: shopverse-frontend-ingress
-  ingressHost: ""
-
 # ──────────────────────────────────────
 # Backend
 # ──────────────────────────────────────
