@@ -1,8 +1,12 @@
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .Values.ingress.name }}                            # shopverse-base-ingress
+  {{- with .Values.ingress.annotations }}
   annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}    # alb
 
@@ -17,3 +21,4 @@ spec:
                 name: dummy-service
                 port:
                   number: 80
+{{- end }}
