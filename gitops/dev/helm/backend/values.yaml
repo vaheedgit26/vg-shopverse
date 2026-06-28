@@ -6,13 +6,39 @@ backend:
     uri: 254405569649.dkr.ecr.us-east-1.amazonaws.com
     name: shopverse-backend
     version: v1
+
+  deployment:
+    name: shopverse-backend
+    replicas: 1
     
-  deploymentName: shopverse-backend
-  replicas: 1
-  serviceName: shopverse-backend-svc
-  servicePort: 8080
-  ingressName: shopverse-backend-ingress
-  ingressHost: ""
+  service:
+    name: shopverse-backend-svc
+    port: 8080
+
+  ingress:
+    enabled: false
+    name: shopverse-backend-ingress
+    path: /api
+    host: ""
+
+    annotations:
+      # Backend-specific health check
+      alb.ingress.kubernetes.io/healthcheck-path: /health
+      alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    
+      # This is important to mix all the service ingresses and form one complete ingress
+      alb.ingress.kubernetes.io/group.name: shopverse-dev
+
+      alb.ingress.kubernetes.io/group.order: "1"   # 🔥 higher priority
+      
+# ──────────────────────────────────────
+# Shared
+# ──────────────────────────────────────
+shared:
+  ingress:
+    annotations:
+      # This is important to mix all the service ingresses and form one complete ingress
+      alb.ingress.kubernetes.io/group.name: shopverse-dev
 
 # ──────────────────────────────────────
 # MySQL
