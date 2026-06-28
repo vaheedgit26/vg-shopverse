@@ -31,11 +31,11 @@ spec:
                 name: {{ .Values.backend.secret.name }}     # shopverse-dev-mysql-jwt-credentials
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "100m"
+              cpu: {{ .Values.backend.resources.requests.cpu | quote }}        # "100m"
+              memory: {{ .Values.backend.resources.requests.memory | quote }}  # "128Mi"
             limits:
-              memory: "256Mi"
-              cpu: "200m"
+              cpu: {{ .Values.backend.resources.limits.cpu | quote }}          # "200m"
+              memory: {{ .Values.backend.resources.limits.memory | quote }}    # "256Mi"   
           livenessProbe:
             httpGet:
               path: /health
