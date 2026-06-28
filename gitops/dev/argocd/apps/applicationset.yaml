@@ -45,7 +45,7 @@ spec:
       source:
         repoURL: https://github.com/vaheedgit26/vg-shopverse.git
         targetRevision: main
-        path: gitops/dev/helm                 
+        path: "gitops/dev/helm/{{component}}"
         helm:
           releaseName: "{{project}}-{{env}}-{{component}}"  # must be <= 53 chars
           valueFiles:
