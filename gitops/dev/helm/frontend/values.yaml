@@ -1,3 +1,4 @@
+namespace: shopverse-dev
 frontend:
   image:
     uri: 254405569649.dkr.ecr.us-east-1.amazonaws.com
@@ -5,11 +6,11 @@ frontend:
     version: v1
 
   deployment:
-    name: shopverse-frontend
+    name: frontend-deploy
     replicas: 1
 
   service:
-    name: shopverse-frontend-svc
+    name: frontend-svc
     port: 8080
   
   ingress:
