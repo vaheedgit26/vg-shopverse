@@ -5,10 +5,7 @@ metadata:
   namespace: argocd
 spec:
   # Allowed Git repositories
-  sourceRepos:
-    # - https://github.com/my-org/*              # Allow all repos under your org
-    # - https://github.com/my-org/expense.git    # Or specific repo
-    
+  sourceRepos: 
     - https://github.com/vaheedgit26/vg-shopverse.git
 
   # Allowed destinations (namespaces + clusters)
