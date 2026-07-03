@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.ame }}
+  name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
   labels:
     app: shopverse
