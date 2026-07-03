@@ -1,12 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.frontend.deploymentName }}
+  name: {{ .Values.deployment.ame }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: shopverse
     component: frontend
 spec:
-  replicas: {{ .Values.frontend.replicas }}
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
       app: shopverse
