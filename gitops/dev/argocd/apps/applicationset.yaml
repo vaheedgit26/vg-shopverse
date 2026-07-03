@@ -6,7 +6,7 @@ metadata:
 spec:
   generators:
     # MATRIX = 1. All list items * 1st git repo folder
-    #          2. All list items * 2nd git repo folder 
+    #          2. All list items * 2nd git repo folder ...
     - matrix:
         generators:
           - list:
