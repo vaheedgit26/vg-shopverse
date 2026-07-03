@@ -220,7 +220,7 @@ Use specific secret ARN
 ```yaml
 refreshInterval: 1m
 ```
-- `**30s–5m typical**`   
+- **`30s–5m typical`**   
 
 **✅ 3. Use Rolling Updates**   
 ```yaml
