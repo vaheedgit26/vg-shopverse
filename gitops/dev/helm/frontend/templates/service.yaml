@@ -9,7 +9,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}     # 8080
+    - port: {{ .Values.service.port }}             # 8080
       targetPort: {{ .Values.service.targetPort }} # 8080
       protocol: TCP
   selector:
