@@ -1,5 +1,5 @@
 # ──────────────────────────────────────--------------------------
-# Frontend Ingress
+# BASE Ingress
 # ──────────────────────────────────────--------------------------
 backendIngress:
   enabled: false
@@ -47,7 +47,7 @@ backendIngress:
     # alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:REGION:ACCOUNT:regional/webacl/XXXX
 
 # ──────────────────────────────────────--------------------------
-# Backend Ingress
+# BACKEND Ingress
 # ──────────────────────────────────────--------------------------
 frontendIngress:
   enabled: false
@@ -68,7 +68,7 @@ frontendIngress:
     alb.ingress.kubernetes.io/group.order: "1"   # 🔥 higher priority
 
 # ──────────────────────────────────────--------------------------
-# Frontend Ingress
+# FRONTEND Ingress
 # ──────────────────────────────────────--------------------------
 frontendIngress:
 enabled: false
