@@ -15,7 +15,7 @@ Pods use updated DB_HOST
 ```
 
 ## 🎯 What you achieve
-✔ One central DB config
-✔ No hardcoding in Helm charts
-✔ Auto-update when AWS secret changes
-✔ No manual redeploys
+✔ One central DB config  
+✔ No hardcoding in Helm charts  
+✔ Auto-update when AWS secret changes  
+✔ No manual redeploys  
