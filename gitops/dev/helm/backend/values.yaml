@@ -35,7 +35,7 @@ backend:
 # MySQL
 # ──────────────────────────────────────
 mysql:
-  host: shopverse-dev-mysql.ca9aykaigakf.us-east-1.rds.amazonaws.com
+  # host: shopverse-dev-mysql.ca9aykaigakf.us-east-1.rds.amazonaws.com
   port: 3306
   externalNameService: shopverse-mysql-ens
   database: shopverse
