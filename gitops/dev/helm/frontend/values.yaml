@@ -25,6 +25,7 @@ resources:
     memory: "128Mi"
 
 livenessProbe:
+  enabled: true
   httpGet:
     path: /health
     port: 8080
@@ -32,6 +33,7 @@ livenessProbe:
     periodSeconds: 30
     
 readinessProbe:
+  enabled: true
   httpGet:
     path: /health
     port: 8080
