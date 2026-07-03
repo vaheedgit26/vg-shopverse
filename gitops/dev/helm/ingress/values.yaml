@@ -1,10 +1,16 @@
+namespace: shopverse-dev
 # ──────────────────────────────────────--------------------------
 # BASE Ingress
 # ──────────────────────────────────────--------------------------
-backendIngress:
+baseIngress:
   enabled: false
   name: shopverse-base-ingress
   ingressClassName: alb
+
+  path: /health
+  pathType: Prefix
+  serviceName: frontend-svc
+  servicePort: 8080
   
   annotations: 
     # ALB Exposure
@@ -35,7 +41,10 @@ backendIngress:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
     
     # Grouping (very important for multiple ingresses)
-    alb.ingress.kubernetes.io/group.name: shopverse
+    alb.ingress.kubernetes.io/group.name: shopverse-dev
+
+    # Highest priority
+    alb.ingress.kubernetes.io/group.order: "0"
 
     # ACM Certificate
     # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:REGION:ACCOUNT:certificate/XXXX
@@ -49,13 +58,15 @@ backendIngress:
 # ──────────────────────────────────────--------------------------
 # BACKEND Ingress
 # ──────────────────────────────────────--------------------------
-frontendIngress:
+backendIngress:
   enabled: false
   name: shopverse-backend-ingress
   ingressClassName: alb
+  
   path: /api
   pathType: Prefix
-  host: ""
+  serviceName: backend-svc
+  servicePort: 8080
 
   annotations:
     # Backend-specific health check
@@ -74,9 +85,12 @@ frontendIngress:
 enabled: false
   name: shopverse-frontend-ingress
   ingressClassName: alb
+  
   path: /
   pathType: Prefix
-  host: ""
+  serviceName: frontend-svc
+  servicePort: 8080
+  
 
   annotations:
     # Backend-specific health check
