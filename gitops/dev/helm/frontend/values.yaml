@@ -23,6 +23,20 @@ resources:
   limits:
     cpu: "100m"
     memory: "128Mi"
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 10
     
 # ──────────────────────────────────────
 # MySQL
