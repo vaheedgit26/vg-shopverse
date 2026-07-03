@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.backend.deployment.name }}
+  name: {{ .Values.deployment.name }}
   namespace: {{ .Values.namespace }}
   labels:
     app: shopverse
     component: backend
 spec:
-  replicas: {{ .Values.backend.deployment.replicas }}
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
       app: shopverse
@@ -27,16 +27,16 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: {{ .Values.backend.configmap.name }}  # shopverse-config
+                name: {{ .Values.configmap.name }}  # shopverse-config
             - secretRef:
-                name: {{ .Values.backend.secret.name }}     # shopverse-dev-mysql-jwt-credentials
+                name: {{ .Values.secret.name }}     # shopverse-dev-mysql-jwt-credentials
           resources:
             requests:
-              cpu: {{ .Values.backend.resources.requests.cpu | quote }}        # "100m"
-              memory: {{ .Values.backend.resources.requests.memory | quote }}  # "128Mi"
+              cpu: {{ .Values.resources.requests.cpu | quote }}        # "100m"
+              memory: {{ .Values.resources.requests.memory | quote }}  # "128Mi"
             limits:
-              cpu: {{ .Values.backend.resources.limits.cpu | quote }}          # "200m"
-              memory: {{ .Values.backend.resources.limits.memory | quote }}    # "256Mi"   
+              cpu: {{ .Values.resources.limits.cpu | quote }}          # "200m"
+              memory: {{ .Values.resources.limits.memory | quote }}    # "256Mi"   
           livenessProbe:
             httpGet:
               path: /health
