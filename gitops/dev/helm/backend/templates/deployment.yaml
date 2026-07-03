@@ -30,13 +30,12 @@ spec:
                 name: {{ .Values.configmap.name }}  # shopverse-config
             - secretRef:
                 name: {{ .Values.secret.name }}     # shopverse-dev-mysql-jwt-credentials
+                
+          {{- with .Values.resources }}      
           resources:
-            requests:
-              cpu: {{ .Values.resources.requests.cpu | quote }}        # "100m"
-              memory: {{ .Values.resources.requests.memory | quote }}  # "128Mi"
-            limits:
-              cpu: {{ .Values.resources.limits.cpu | quote }}          # "200m"
-              memory: {{ .Values.resources.limits.memory | quote }}    # "256Mi"   
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+         
           livenessProbe:
             httpGet:
               path: /health
