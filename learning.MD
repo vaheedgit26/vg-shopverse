@@ -1,2 +1,15 @@
 ## This is the exact production pattern many teams use on EKS. I’ll walk you through the end-to-end flow + every file you need, step by step.   
-# 🏆 Architecture Overview  
+## 🏆 Architecture Overview  
+```text
+AWS Secrets Manager (DB host, creds)
+            ↓
+External Secrets Operator (ESO)
+            ↓
+Kubernetes Secret (global-db-secret)
+            ↓
+Reloader detects change
+            ↓
+Deployments restart automatically
+            ↓
+Pods use updated DB_HOST
+```
