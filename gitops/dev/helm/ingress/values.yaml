@@ -82,7 +82,7 @@ backendIngress:
 # FRONTEND Ingress
 # ──────────────────────────────────────--------------------------
 frontendIngress:
-enabled: false
+  enabled: false
   name: shopverse-frontend-ingress
   ingressClassName: alb
   
