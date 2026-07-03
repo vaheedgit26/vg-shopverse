@@ -2,14 +2,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.backendIngress.name }}                             # shopverse-backend-ingress
+  name: {{ .Values.backendIngress.name }}                            # shopverse-backend-ingress
   namespace: {{ .Values.namespace }}
   {{- with .Values.backendIngress.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  ingressClassName: {{ .Values.backendIngress.ingressClassName }}     # alb
+  ingressClassName: {{ .Values.backendIngress.ingressClassName }}    # alb
   rules:
     - http:
         paths:
