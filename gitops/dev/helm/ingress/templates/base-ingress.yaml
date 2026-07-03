@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}    # alb
 
-  # ⚠️ Dummy rule (required to create ALB)
+  # Atleast one rule required to create ALB
   rules:
     - http:
         paths:
