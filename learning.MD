@@ -206,10 +206,13 @@ New pods use updated DB config
 }
 ```
 **Watch pods:**
-```json
+```bash
 kubectl get pods -w
 ```
 **👉 You should see restart automatically ✅**
 
-## 👉 You should see restart automatically ✅  
+## 🛡️ Production Best Practices  
+✅ **1. Restrict IAM**  
+Don’t use `"Resource": "*"`  
+Use specific secret ARN  
 
