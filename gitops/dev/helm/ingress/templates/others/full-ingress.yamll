@@ -1,3 +1,4 @@
+{{- if false }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -54,3 +55,4 @@ spec:
                 name: shopverse-frontend-svc
                 port:
                   number: 8080
+{{- end }}
