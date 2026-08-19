@@ -163,12 +163,7 @@ jobs:
   Codeql-Analysis-Job:
     name: CodeQL 
     runs-on: ubuntu-latest
-  
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ inputs.service-name }}
-
+    
   #  permissions:
   #    contents: read  
   #    security-events: write
@@ -186,6 +181,14 @@ jobs:
         with:
           go-version: "1.24"
 
+      - name: Create CodeQL configuration
+        run: |
+          cat > codeql-config.yml <<EOF
+          name: Go CodeQL
+          paths:
+            - ${{ inputs.service-name }}
+          EOF
+
       # Initialize CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -193,6 +196,7 @@ jobs:
           languages: go
           queries: security-extended
           build-mode: manual
+          config-file: codeql-config.yml
 
       # Build GO Application automatically
       #- name: Autobuild 
@@ -200,10 +204,12 @@ jobs:
 
       # Download Go dependencies
       - name: Download Go dependencies
+        working-directory: ${{ inputs.service-name }}
         run: go mod download
 
       # Build Go Application
       - name: Build Go App manually
+        working-directory: ${{ inputs.service-name }}
         run: go build ./...
           
       # Run CodeQL analysis 
