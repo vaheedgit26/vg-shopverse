@@ -28,7 +28,6 @@ permissions:
 jobs:    
 
   gitleaks-job:
-
     name: gitleaks
     if: ${{ inputs.gitleaks }}
     runs-on: ubuntu-latest
@@ -39,7 +38,6 @@ jobs:
   #    security-events: write
 
     steps:
-      
       - name: Checkout Code
         uses: actions/checkout@v6
         with:
@@ -72,7 +70,6 @@ jobs:
           retention-days: 1
 
   sast-sonarqube-job:
-
     name: sast-sonarqube
     if: ${{ inputs.sonarqube-scan }}
     runs-on: ubuntu-latest
@@ -119,7 +116,6 @@ jobs:
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
   trivy-fs-scan-job:
-
     name: Trivy FS Scan
     runs-on: ubuntu-latest
 
@@ -152,7 +148,6 @@ jobs:
           category: trivy-fs-${{ inputs.service-name }}
 
   codeql-analysis-job:
-    
     name: CodeQL 
     runs-on: ubuntu-latest
   
