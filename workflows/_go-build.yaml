@@ -233,7 +233,7 @@ jobs:
         with:
           version: v0.72.0
           scan-type: config
-          scan-ref: Dockerfile
+          scan-ref: ${{ inputs.service-name }}/Dockerfile
           format: sarif
           output: trivy-${{ inputs.service-name }}-dockerfile.sarif
           severity: HIGH,CRITICAL
@@ -247,7 +247,7 @@ jobs:
           sudo mv conftest /usr/local/bin/
 
       - name: OPA Policy Check
-        run: conftest test Dockerfile --policy docker-policy.rego
+        run: conftest test ${{ inputs.service-name }}/Dockerfile --policy docker-policy.rego
 
   Build-Scan-Push-Image-Job:
     name: Build and Scan Container Image
