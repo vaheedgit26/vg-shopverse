@@ -220,7 +220,7 @@ jobs:
 
   Dockerfile-Scan-Job:
     name: Dockerfile Scan
-    runs-on:: ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
