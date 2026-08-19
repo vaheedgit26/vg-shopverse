@@ -32,10 +32,10 @@ on:
 
 permissions:
   contents: read              # Checkout
-  pull-requests: read         # Read Pull Requests
-  security-events: write      # Upload SARIF (CodeQL, Trivy)
-  actions: read               # Required by CodeQL action
-  id-token: write             # Token for keyless sign
+#  pull-requests: read         # Read Pull Requests
+#  security-events: write      # Upload SARIF (CodeQL, Trivy)
+#  actions: read               # Required by CodeQL action
+#  id-token: write             # Token for keyless sign
 
 jobs:    
 
@@ -44,10 +44,10 @@ jobs:
     if: ${{ inputs.gitleaks }}
     runs-on: ubuntu-latest
 
-  #  permissions:
-  #    contents: read
-  #    pull-requests: read
-  #    security-events: write
+    permissions:
+      contents: read
+      pull-requests: read
+      security-events: write
 
     steps:
       - name: Checkout Code
@@ -91,8 +91,8 @@ jobs:
         shell: bash
         working-directory: ${{ inputs.service-name }}
 
-  #  permissions:
-  #    contents: read
+    permissions:
+      contents: read
       
     steps:
       - name: Checkout Code
@@ -131,9 +131,9 @@ jobs:
     name: Trivy FS Scan
     runs-on: ubuntu-latest
 
-  #  permissions:
-  #    contents: read
-  #    security-events: write
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout Code
@@ -164,10 +164,10 @@ jobs:
     name: CodeQL 
     runs-on: ubuntu-latest
     
-  #  permissions:
-  #    contents: read  
-  #    security-events: write
-  #    actions: read
+    permissions:
+      contents: read  
+      security-events: write
+      actions: read
 
     steps:
       # Checkout Source Code
@@ -222,6 +222,10 @@ jobs:
     name: Dockerfile Scan
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      security-events: write
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -260,13 +264,17 @@ jobs:
     name: Build and Scan Container Image
     runs-on: ubuntu-latest
     
-    needs: 
+    needs:
+      - Gitleaks-Job
+      - Sast-Sonarqube-Job
+      - Trivy-Fs-Scan-Job
+      - Codeql-Analysis-Job
       - Dockerfile-Scan-Job
 
-  #  permissions:
-  #    contents: read
-  #    security-events: write
-  #    id-token: write
+    permissions:
+      contents: read
+      security-events: write
+      id-token: write
   
     outputs:
       image_with_digest: ${{ steps.push.outputs.image_with_digest }}
@@ -301,7 +309,7 @@ jobs:
         id: image-build
         run: |
           IMAGE_WITH_TAG="${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.meta.outputs.image_tag }}"
-          cd ${{ inputs.service-dir }}
+          cd ${{ inputs.service-name }}
           docker build -t $IMAGE_WITH_TAG .
 
           echo "image_with_tag=$IMAGE_WITH_TAG" >> $GITHUB_OUTPUT
@@ -350,9 +358,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [Build-Scan-Push-Image-Job]
 
-  #  permissions:
-  #    id-token: write
-  #    contents: read
+    permissions:
+      id-token: write
+      contents: read
 
     env:
       IMAGE_WITH_DIGEST: ${{ needs.Build-Scan-Push-Image-Job.outputs.image_with_digest }}
@@ -373,6 +381,9 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Verify image reference
+        run: echo "Image: $IMAGE_WITH_DIGEST"
+          
       # ── Cosign keyless sign ────────────────────────────────────────────────────
       # GitHub OIDC token → Fulcio CA issues short-lived cert → Rekor audit log entry
       # No long-lived signing keys. Kyverno policy in EKS verifies signature at admission.
@@ -380,7 +391,7 @@ jobs:
         uses: sigstore/cosign-installer@v3
 
       - name: Cosign — Sign image (keyless, GitHub OIDC → Fulcio → Rekor)
-        run: cosign sign --yes $IMAGE_WITH_DIGEST
+        run: cosign sign --yes "$IMAGE_WITH_DIGEST"
 
       - name: Generate SBOM - CycloneDX
         uses: aquasecurity/trivy-action@v0.36.0
