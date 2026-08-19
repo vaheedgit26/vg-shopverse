@@ -1,0 +1,359 @@
+name: Reusable - GO build and Security Gates (No Docker)
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        description: "Service name (e.g. api-gateway)"
+        required: true
+        type: string
+
+      gitleaks:
+        description: "Gitleaks Scan"
+        required: true
+        type: boolean
+        default: false
+
+      sonarqube-scan:
+        description: "SonarQube Scan"
+        required: true
+        type: boolean
+        default: false
+
+      ecr-repo:
+        description: "ECR Repository Name"
+        required: true
+        type: string
+
+      aws-region:
+        description: "AWS region where ECR lives"
+        required: false
+        type: string
+        default: us-east-1
+
+permissions:
+  contents: read              # Checkout
+  pull-requests: read         # Read Pull Requests
+  security-events: write      # Upload SARIF (CodeQL, Trivy)
+  actions: read               # Required by CodeQL action
+  id-token: write             # Token for keyless sign
+
+
+jobs:    
+
+  Gitleaks-Job:
+    name: gitleaks
+    if: ${{ inputs.gitleaks }}
+    runs-on: ubuntu-latest
+
+  #  permissions:
+  #    contents: read
+  #    pull-requests: read
+  #    security-events: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      
+      - name: Run Gitleaks
+        id: gitleaks
+        uses: gitleaks/gitleaks-action@v3
+        # continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Uncomment if your organization requires a Gitleaks license
+          # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+      - name: Upload Gitleaks SARIF to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: results.sarif
+          category: gitleaks-${{ inputs.service-name }}
+      
+      - name: Upload Gitleaks report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-sarif-${{ github.run_number }}
+          path: results.sarif
+          if-no-files-found: warn
+          retention-days: 1
+
+  Sast-Sonarqube-Job:
+    name: sast-sonarqube
+    if: ${{ inputs.sonarqube-scan }}
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+  #  permissions:
+  #    contents: read
+      
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.24"
+
+      # - name: Update go.sum
+      #   run: go mod tidy
+
+      - name: Download dependencies
+        run: go mod download
+          
+      - name: Run Go tests
+        run: go test -coverprofile=coverage.out ./...
+
+      - name: Verify coverage report
+        run: |
+          test -f coverage.out || {
+            echo "ERROR: coverage.out not found"
+            exit 1
+          }
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+
+  Trivy-Fs-Scan-Job:
+    name: Trivy FS Scan
+    runs-on: ubuntu-latest
+
+  #  permissions:
+  #    contents: read
+  #    security-events: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Trivy Filesystem Scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: fs
+          scan-ref: .
+          format: sarif
+          output: trivy-fs.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 0   # 1
+
+      - name: Upload Trivy FS SARIF to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-fs.sarif
+          category: trivy-fs-${{ inputs.service-name }}
+
+  Codeql-Analysis-Job:
+    name: CodeQL 
+    runs-on: ubuntu-latest
+  
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./backend
+
+  #  permissions:
+  #    contents: read  
+  #    security-events: write
+  #    actions: read
+
+    steps:
+      # Checkout Source Code
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.24"
+
+      # Initialize CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: go
+          queries: security-extended
+          build-mode: manual
+
+      # Build GO Application automatically
+      #- name: Autobuild 
+      #  uses: github/codeql-action/autobuild@v4
+
+      # Download Go dependencies
+      - name: Download Go dependencies
+        run: go mod download
+
+      # Build GO Application
+      - name: Build GO App manually
+        run: go build ./...
+          
+      # Run CodeQL analysis 
+      - name: Perform CodeQL Analysis 
+        uses: github/codeql-action/analyze@v4 
+        with: 
+          category: "/language:go"
+
+  Dockerfile-Scan-Job:
+    name: Dockerfile Scan
+    runs-on:: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Trivy Dockerfile Scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          scan-type: config
+          scan-ref: Dockerfile
+          format: sarif
+          output: trivy-${{ inputs.service-name }}-dockerfile.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 0   # 1
+
+      - name: Install Conftest
+        run: |
+          wget https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_Linux_x86_64.tar.gz
+          tar xzf conftest_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin/
+
+      - name: OPA Policy Check
+        run: conftest test Dockerfile --policy docker-policy.rego
+
+  Build-Scan-Push-Image-Job:
+    name: Build and Scan Container Image
+    runs-on: ubuntu-latest
+    needs: 
+      - Dockerfile-Scan-Job
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set image tag
+        id: meta
+        run: echo "image_tag=sha-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/shopverse-dev-github-actions-role
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Image Build
+        id: image-build
+        run: |
+          IMAGE_WITH_TAG="${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ steps.meta.outputs.image_tag }}"
+          cd ${{ inputs.service-dir }}
+          docker build -t $IMAGE_WITH_TAG .
+
+          echo "image_with_tag=$IMAGE_WITH_TAG" >> $GITHUB_OUTPUT
+
+      - name: Trivy — Image vulnerability scan
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ steps.image-build.outputs.image_with_tag }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 0
+
+      - name: Upload Trivy Image SARIF to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-fs.sarif
+          category: trivy-image-${{ inputs.service-name }}
+
+      - name: Push image to ECR
+        id: push
+        run: |
+          IMAGE_WITH_TAG="${{ steps.image-build.outputs.image_with_tag }}"
+          docker push "$IMAGE_WITH_TAG"
+
+          # Capture the content-addressable digest for immutable signing reference
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE" | awk -F@ '{print $2}')
+
+          IMAGE_WITH_DIGEST=${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}@$DIGEST
+
+          echo "digest=$DIGEST" >> $GITHUB_OUTPUT
+          echo "Pushed: $IMAGE_WITH_TAG  (digest: $DIGEST)"
+          echo "image_with_digest=$IMAGE_WITH_DIGEST" >> $GITHUB_OUTPUT
+
+        outputs:
+          image_with_digest=$image_with_digest
+
+  Sign-Image-Sbom:
+    name: Sign Image & Generate Sbom
+    runs-on: ubuntu-latest
+    needs: [Build-Scan-Push-Image-Job]
+
+  #  permissions:
+  #    id-token: write
+  #    contents: read
+
+    env:
+      IMAGE_WITH_DIGEST: ${{ needs.Build-Scan-Push-Image-Job.outputs.image_with_digest }}
+
+    steps:
+      # ── Cosign keyless sign ────────────────────────────────────────────────────
+      # GitHub OIDC token → Fulcio CA issues short-lived cert → Rekor audit log entry
+      # No long-lived signing keys. Kyverno policy in EKS verifies signature at admission.
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Cosign — Sign image (keyless, GitHub OIDC → Fulcio → Rekor)
+        run: cosign sign --yes $IMAGE_WITH_DIGEST
+
+      - name: Generate SBOM - CycloneDX
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          version: v0.72.0
+          image-ref: ${{ env.IMAGE_WITH_DIGEST }}
+          format: cyclonedx
+          output: sbom.cdx.json 
+
+      - name: SBOM Attestation
+        run: |
+          cosign attest --yes \
+          --predicate sbom.cdx.json \
+          --type cyclonedx \
+          "$IMAGE_WITH_DIGEST"
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-image-${{ inputs.service-name }}
+          path: sbom.cdx.json
+          retention-days: 1      
+    
