@@ -131,11 +131,6 @@ jobs:
     name: Trivy FS Scan
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ inputs.service-name }}
-
   #  permissions:
   #    contents: read
   #    security-events: write
@@ -151,9 +146,9 @@ jobs:
         with:
           version: v0.72.0
           scan-type: fs
-          scan-ref: .
+          scan-ref: ${{ inputs.service-name }}
           format: sarif
-          output: trivy-fs.sarif
+          output: trivy-fs-${{ github.run_number }}.sarif
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           exit-code: 0   # 1
@@ -162,7 +157,7 @@ jobs:
         if: always()
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: trivy-fs.sarif
+          sarif_file: trivy-fs-${{ github.run_number }}.sarif
           category: trivy-fs-${{ inputs.service-name }}
 
   Codeql-Analysis-Job:
