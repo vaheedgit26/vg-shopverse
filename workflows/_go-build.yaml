@@ -1,4 +1,4 @@
-name: Reusable - GO build and Security Gates (No Docker)
+name: Reusable - GO build and Security Gates
 on:
   workflow_call:
     inputs:
@@ -36,7 +36,6 @@ permissions:
   security-events: write      # Upload SARIF (CodeQL, Trivy)
   actions: read               # Required by CodeQL action
   id-token: write             # Token for keyless sign
-
 
 jobs:    
 
