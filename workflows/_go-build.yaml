@@ -271,6 +271,14 @@ jobs:
       - Codeql-Analysis-Job
       - Dockerfile-Scan-Job
 
+    if: |
+      always() &&
+      (needs.Trivy-Fs-Scan-Job.result == 'success' || needs.Trivy-Fs-Scan-Job.result == 'skipped') &&
+      (needs.Codeql-Analysis-Job.result == 'success' || needs.Codeql-Analysis-Job.result == 'skipped') &&
+      (needs.Dockerfile-Scan-Job.result == 'success' || needs.Dockerfile-Scan-Job.result == 'skipped') &&
+      (needs.Gitleaks-Job.result == 'success' || needs.Gitleaks-Job.result == 'skipped') &&
+      (needs.Sast-Sonarqube-Job.result == 'success' || needs.Sast-Sonarqube-Job.result == 'skipped')
+
     permissions:
       contents: read
       security-events: write
