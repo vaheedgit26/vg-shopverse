@@ -1,0 +1,33 @@
+name: GO Services CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+  security-events: write
+  actions: read
+  id-token: write
+
+jobs:
+
+  api-gateway:
+    name: API Gateway Security Pipeline
+
+    uses: ./.github/workflows/reusable-go-security-gates.yml
+
+    with:
+      service-name: api-gateway
+      gitleaks: true
+      sonarqube-scan: true
+      ecr-repository: shopverse/api-gateway
+      aws-region: us-east-1
+
+    secrets: inherit
