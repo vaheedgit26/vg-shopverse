@@ -19,7 +19,7 @@ on:
         type: boolean
         default: false
 
-      ecr-repo:
+      ecr-repository:
         description: "ECR Repository Name"
         required: true
         type: string
@@ -259,8 +259,18 @@ jobs:
   Build-Scan-Push-Image-Job:
     name: Build and Scan Container Image
     runs-on: ubuntu-latest
+    
     needs: 
       - Dockerfile-Scan-Job
+
+  #  permissions:
+  #    contents: read
+  #    security-events: write
+  #    id-token: write
+  
+    outputs:
+    image_with_digest: ${{ steps.push.outputs.image_with_digest }}
+      
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -281,10 +291,10 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Image Build
+      - name: Build Image
         id: image-build
         run: |
-          IMAGE_WITH_TAG="${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repo }}:${{ steps.meta.outputs.image_tag }}"
+          IMAGE_WITH_TAG="${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}:${{ steps.meta.outputs.image_tag }}"
           cd ${{ inputs.service-dir }}
           docker build -t $IMAGE_WITH_TAG .
 
@@ -308,6 +318,9 @@ jobs:
           sarif_file: trivy-image-${{ inputs.service-name }}.sarif
           category: trivy-image-${{ inputs.service-name }}
 
+      - name: Verify AWS CLI
+        run: aws --version
+    
       - name: Push image to ECR
         id: push
         run: |
@@ -315,16 +328,19 @@ jobs:
           docker push "$IMAGE_WITH_TAG"
 
           # Capture the content-addressable digest for immutable signing reference
-          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE" | awk -F@ '{print $2}')
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE_WITH_TAG" | awk -F@ '{print $2}')
 
-          IMAGE_WITH_DIGEST=${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}@$DIGEST
+          # DIGEST=$(aws ecr describe-images \
+          #   --repository-name "${{ inputs.ecr-repository }}" \
+          #   --image-ids imageTag="${{ steps.meta.outputs.image_tag }}" \
+          #   --query 'imageDetails[0].imageDigest' \
+          #   --output text)
+
+          IMAGE_WITH_DIGEST="${{ steps.login-ecr.outputs.registry }}/${{ inputs.ecr-repository }}@$DIGEST"
 
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
           echo "Pushed: $IMAGE_WITH_TAG  (digest: $DIGEST)"
           echo "image_with_digest=$IMAGE_WITH_DIGEST" >> $GITHUB_OUTPUT
-
-        outputs:
-          image_with_digest=$image_with_digest
 
   Sign-Image-Sbom:
     name: Sign Image & Generate Sbom
