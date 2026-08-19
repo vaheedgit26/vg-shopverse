@@ -131,6 +131,11 @@ jobs:
     name: Trivy FS Scan
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.service-name }}
+
   #  permissions:
   #    contents: read
   #    security-events: write
