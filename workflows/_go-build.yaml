@@ -269,7 +269,7 @@ jobs:
   #    id-token: write
   
     outputs:
-    image_with_digest: ${{ steps.push.outputs.image_with_digest }}
+      image_with_digest: ${{ steps.push.outputs.image_with_digest }}
       
     steps:
       - name: Checkout Code
