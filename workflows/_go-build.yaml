@@ -358,6 +358,21 @@ jobs:
       IMAGE_WITH_DIGEST: ${{ needs.Build-Scan-Push-Image-Job.outputs.image_with_digest }}
 
     steps:
+      - name: Verify AWS CLI
+        run: aws --version
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/shopverse-dev-github-actions-role
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
       # ── Cosign keyless sign ────────────────────────────────────────────────────
       # GitHub OIDC token → Fulcio CA issues short-lived cert → Rekor audit log entry
       # No long-lived signing keys. Kyverno policy in EKS verifies signature at admission.
