@@ -167,7 +167,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./backend
+        working-directory: $ {{ inputs.service-name }}
 
   #  permissions:
   #    contents: read  
