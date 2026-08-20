@@ -1,5 +1,5 @@
-name: PR check backend
-# Runs on feature/fix/chore branches.
+name: PR check - backend
+# Runs on feature/fix/chore branches and PRs to develop.
 # Lint + test + SAST only. No Docker, no ECR, no deploy.
 on:
   push:
@@ -7,6 +7,12 @@ on:
     paths:
       - 'backend/**'
       - '.github/workflows/ci-pr-backend.yml'
+
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'backend/**'
+      
 jobs:
   go-pr-check-job:
     uses: ./.github/workflows/_go-pr-check.yml
