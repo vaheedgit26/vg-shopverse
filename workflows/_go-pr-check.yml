@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: read              # Checkout
+  
   # pull-requests: read         # Read Pull Requests
   # security-events: write      # Upload SARIF (Gitleaks, Trivy, CodeQL)
   # actions: read               # Required by CodeQL action
