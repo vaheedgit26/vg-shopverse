@@ -31,7 +31,8 @@ on:
         default: us-east-1
 
 permissions:
-  contents: read              # Checkout
+  contents: read               # Checkout
+  
 #  pull-requests: read         # Read Pull Requests
 #  security-events: write      # Upload SARIF (CodeQL, Trivy)
 #  actions: read               # Required by CodeQL action
