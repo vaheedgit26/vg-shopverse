@@ -25,6 +25,7 @@ permissions:
   # security-events: write      # Upload SARIF (Gitleaks, Trivy, CodeQL)
   # actions: read               # Required by CodeQL action
 
+
 jobs:    
 
   Gitleaks-Job:
@@ -58,13 +59,13 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
-          category: gitleaks-${{ inputs.service-name }}--${{ github.run_number }}
+          category: gitleaks-${{ inputs.service-name }}-${{ github.run_number }}
       
       - name: Upload Gitleaks report artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gitleaks-sarif-${{ github.run_number }}--${{ github.run_number }}
+          name: gitleaks-${{ inputs.service-name }}-${{ github.run_number }}
           path: results.sarif
           if-no-files-found: warn
           retention-days: 1
@@ -151,12 +152,7 @@ jobs:
   Codeql-Analysis-Job:
     name: CodeQL 
     runs-on: ubuntu-latest
-  
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./backend
-
+    
     permissions:
       contents: read  
       security-events: write
@@ -190,16 +186,16 @@ jobs:
           queries: security-extended
           build-mode: manual
           config-file: codeql-config.yml
-          
+
       # Build GO Application automatically
-      # - name: Autobuild 
-      #   uses: github/codeql-action/autobuild@v4
+      #- name: Autobuild 
+      #  uses: github/codeql-action/autobuild@v4
 
       # Download Go dependencies
       - name: Download Go dependencies
         working-directory: ${{ inputs.service-name }}
         run: go mod download
-        
+
       # Build Go Application
       - name: Build Go App manually
         working-directory: ${{ inputs.service-name }}
