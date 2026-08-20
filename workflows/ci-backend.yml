@@ -1,33 +1,37 @@
-name: GO Services CI
+name: CICD - GO Services 
 
 on:
   push:
-    branches:
-      - main
+    branches: [develop, 'release/**']
+      
+  paths:
+      - 'backend/**'
+      - '.github/workflows/ci-backend.yml'
 
-  pull_request:
-    branches:
-      - main
-
-permissions:
-  contents: read
-  pull-requests: read
-  security-events: write
-  actions: read
-  id-token: write
+# permissions:
+#   contents: read
+#   pull-requests: read
+#   security-events: write
+#   actions: read
+#   id-token: write
 
 jobs:
 
-  api-gateway:
-    name: API Gateway Security Pipeline
-
+  backend:
+    name: Backend Security Pipeline
     uses: ./.github/workflows/_go-build.yml
-
     with:
       service-name: backend
       gitleaks: true
       sonarqube-scan: true
       ecr-repository: shopverse/backend
       aws-region: us-east-1
+
+    permissions:
+      contents: read
+      pull-requests: read
+      security-events: write
+      actions: read
+      id-token: write
 
     secrets: inherit
