@@ -21,21 +21,21 @@ on:
 
 permissions:
   contents: read              # Checkout
-  pull-requests: read         # Read Pull Requests
-  security-events: write      # Upload SARIF (Gitleaks, Trivy, CodeQL)
-  actions: read               # Required by CodeQL action
+  # pull-requests: read         # Read Pull Requests
+  # security-events: write      # Upload SARIF (Gitleaks, Trivy, CodeQL)
+  # actions: read               # Required by CodeQL action
 
 jobs:    
 
-  gitleaks-job:
-    name: gitleaks
+  Gitleaks-Job:
+    name: Gitleaks Scan
     if: ${{ inputs.gitleaks }}
     runs-on: ubuntu-latest
 
-  #  permissions:
-  #    contents: read
-  #    pull-requests: read
-  #    security-events: write
+    permissions:
+      contents: read
+      pull-requests: read
+      security-events: write
 
     steps:
       - name: Checkout Code
@@ -58,29 +58,29 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
-          category: gitleaks-${{ inputs.service-name }}
+          category: gitleaks-${{ inputs.service-name }}--${{ github.run_number }}
       
       - name: Upload Gitleaks report artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gitleaks-sarif-${{ github.run_number }}
+          name: gitleaks-sarif-${{ github.run_number }}--${{ github.run_number }}
           path: results.sarif
           if-no-files-found: warn
           retention-days: 1
 
-  sast-sonarqube-job:
-    name: sast-sonarqube
+  Sast-Sonarqube-Job:
+    name: Sast Sonarqube
     if: ${{ inputs.sonarqube-scan }}
     runs-on: ubuntu-latest
 
     defaults:
       run:
         shell: bash
-        working-directory: ./backend
+        working-directory: ${{ inputs.service-name }}
 
-  #  permissions:
-  #    contents: read
+    permissions:
+      contents: read
       
     steps:
       - name: Checkout Code
@@ -115,13 +115,13 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 
-  trivy-fs-scan-job:
+  Trivy-Fs-Scan-Job:
     name: Trivy FS Scan
     runs-on: ubuntu-latest
 
-  #  permissions:
-  #    contents: read
-  #    security-events: write
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout Code
@@ -130,12 +130,13 @@ jobs:
           fetch-depth: 0
 
       - name: Trivy Filesystem Scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
+          version: v0.72.0
           scan-type: fs
-          scan-ref: .
+          scan-ref: ${{ inputs.service-name }}
           format: sarif
-          output: trivy-fs.sarif
+          output: trivy-fs-${{ github.run_number }}.sarif
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           exit-code: 0   # 1
@@ -144,10 +145,10 @@ jobs:
         if: always()
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: trivy-fs.sarif
+          sarif_file: trivy-fs-${{ github.run_number }}.sarif
           category: trivy-fs-${{ inputs.service-name }}
 
-  codeql-analysis-job:
+  Codeql-Analysis-Job:
     name: CodeQL 
     runs-on: ubuntu-latest
   
@@ -156,10 +157,10 @@ jobs:
         shell: bash
         working-directory: ./backend
 
-  #  permissions:
-  #    contents: read  
-  #    security-events: write
-  #    actions: read
+    permissions:
+      contents: read  
+      security-events: write
+      actions: read
 
     steps:
       # Checkout Source Code
@@ -173,6 +174,14 @@ jobs:
         with:
           go-version: "1.24"
 
+      - name: Create CodeQL configuration
+        run: |
+          cat > codeql-config.yml <<EOF
+          name: Go CodeQL
+          paths:
+            - ${{ inputs.service-name }}
+          EOF
+
       # Initialize CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -180,17 +189,20 @@ jobs:
           languages: go
           queries: security-extended
           build-mode: manual
-
+          config-file: codeql-config.yml
+          
       # Build GO Application automatically
       # - name: Autobuild 
       #   uses: github/codeql-action/autobuild@v4
 
       # Download Go dependencies
       - name: Download Go dependencies
+        working-directory: ${{ inputs.service-name }}
         run: go mod download
-
-      # Build GO Application
-      - name: Build GO App manually
+        
+      # Build Go Application
+      - name: Build Go App manually
+        working-directory: ${{ inputs.service-name }}
         run: go build ./...
           
       # Run CodeQL analysis 
