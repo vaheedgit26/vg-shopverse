@@ -21,13 +21,13 @@ jobs:
   api-gateway:
     name: API Gateway Security Pipeline
 
-    uses: ./.github/workflows/reusable-go-security-gates.yml
+    uses: ./.github/workflows/_go-build.yml
 
     with:
-      service-name: api-gateway
+      service-name: backend
       gitleaks: true
       sonarqube-scan: true
-      ecr-repository: shopverse/api-gateway
+      ecr-repository: shopverse/backend
       aws-region: us-east-1
 
     secrets: inherit
