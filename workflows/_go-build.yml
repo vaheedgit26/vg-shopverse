@@ -34,9 +34,9 @@ permissions:
   contents: read               # Checkout
   
 #  pull-requests: read         # Read Pull Requests
-#  security-events: write      # Upload SARIF (CodeQL, Trivy)
+#  security-events: write      # Upload SARIF (Gitleaks, Trivy, CodeQL)
 #  actions: read               # Required by CodeQL action
-#  id-token: write             # Token for keyless sign
+#  id-token: write             # Token for keyless sign, AWS Authentication
 
 jobs:    
 
