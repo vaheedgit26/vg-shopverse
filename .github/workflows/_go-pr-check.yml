@@ -16,31 +16,31 @@ on:
 
       sonarqube-scan:
         description: "Enable SonarQube Scan"
-        required: true
+        required: false
         type: boolean
         default: false
 
       sonar-host-url:
         description: "Sonarqube Host Url"
-        required: true
+        required: false
         type: string
         default: ""
 
       gitleaks-scan:
         description: "Enable Gitleaks Scan"
-        required: true
+        required: false
         type: boolean
         default: false
 
       trivy-fs-scan:
         description: "Enable Trivy FS Scan"
-        required: true
+        required: false
         type: boolean
         default: false
 
       codeql-scan:
         description: "Enable Codeql Scan"
-        required: true
+        required: false
         type: boolean
         default: false
         
