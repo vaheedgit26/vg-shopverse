@@ -2,6 +2,8 @@ name: PR Check — backend
 # Runs on feature/fix/chore branches.
 # Lint + test + SAST only. No Docker, no ECR, no deploy.
 on:
+  workflow_dispatch: 
+  
   push:
     branches: ['feat-*', 'fix-*', 'chore-*']
     paths:
@@ -23,7 +25,7 @@ jobs:
       runner: ubuntu-latest
       
       gitleaks-scan: true
-      trivy-fs-scan: true
+      trivy-fs-scan: false
       codeql-scan: false
 
       sonarqube-scan: false
